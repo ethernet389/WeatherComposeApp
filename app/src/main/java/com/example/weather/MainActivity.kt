@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                 val weatherState = remember{
                     mutableStateOf(WeatherData())
                 }
-                updateWeatherData("Irkutsk", 5, Const.API_KEY, weatherState)
+                updateWeatherData("Irkutsk", 3, Const.API_KEY, weatherState)
                 Image(
                     modifier = Modifier
                         .fillMaxSize()

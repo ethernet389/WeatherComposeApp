@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +36,7 @@ import com.example.weather.R
 import com.example.weather.data.WeatherData
 import com.example.weather.ui.theme.BlueLight
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @ExperimentalFoundationApi
 @Composable
@@ -82,14 +84,55 @@ fun WeatherList(weatherState: MutableState<WeatherData>) {
                 .fillMaxWidth()
                 .weight(1f),
             state = pagerState,
-            pageCount = tabList.size
-        ) { index ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-
+            pageCount = tabList.size,
+            pageSpacing = 5.dp
+        ) {index ->
+            when(index) {
+                0 -> HourlyPage(state = weatherState)
+                1 -> DailyPage(state = weatherState)
             }
+        }
+    }
+}
+
+@Composable
+fun DailyPage(state: MutableState<WeatherData>){
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        itemsIndexed(state.value.days){
+                _, item ->
+            WeatherCard(
+                time = item.date,
+                condition = item.description,
+                icon = item.iconUrl,
+                minTemp = item.minTemp,
+                maxTemp = item.maxTemp
+            )
+        }
+    }
+}
+
+@Composable
+fun HourlyPage(state: MutableState<WeatherData>){
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val list = try {
+            state.value.days[0].hours
+        } catch (t: IndexOutOfBoundsException){
+            listOf()
+        }
+        itemsIndexed(list){
+                _, item ->
+            WeatherCard(
+                time = item.time,
+                condition = item.description,
+                icon = item.iconUrl,
+                temp = item.temp
+            )
         }
     }
 }
@@ -126,8 +169,13 @@ fun WeatherCard(
                 Text(text = time, color = Color.Black)
                 Text(text = condition, fontSize = 18.sp, color = Color.White)
             }
+            val tempText =
+                if (temp.isEmpty())
+                    "${minTemp.toFloat().roundToInt()}/${maxTemp.toFloat().roundToInt()}"
+                else
+                    "${temp.toFloat().roundToInt()}°C"
             Text(
-                text = temp.ifEmpty {"${minTemp}/${maxTemp}"},
+                text = tempText,
                 fontSize = 30.sp,
                 color = Color.White
             )

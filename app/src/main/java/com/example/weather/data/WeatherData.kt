@@ -32,9 +32,9 @@ data class WeatherData(
 }
 
 data class CurrentWeatherData(
-    val updateTime: String = "",
-    val temp: String = "",
-    val description: String = "",
+    val updateTime: String = "None",
+    val temp: String = "-0",
+    val description: String = "None",
     val iconUrl: String = ""
 ){
     companion object{
@@ -52,10 +52,10 @@ data class CurrentWeatherData(
 }
 
 data class DailyWeatherData(
-    val date: String = "",
-    val maxTemp: String = "",
-    val minTemp: String = "",
-    val description: String = "",
+    val date: String = "None",
+    val maxTemp: String = "-0",
+    val minTemp: String = "-0",
+    val description: String = "None",
     val iconUrl: String = "",
     val hours: ArrayList<HourlyWeatherData> = ArrayList()
 ){
@@ -86,8 +86,8 @@ data class DailyWeatherData(
 }
 
 data class HourlyWeatherData(
-    val time: String = "",
-    val temp: String = "",
+    val time: String = "None",
+    val temp: String = "-0",
     val description: String = "",
     val iconUrl: String = ""
 ){

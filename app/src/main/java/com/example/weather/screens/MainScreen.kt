@@ -21,22 +21,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.weather.Const
 import com.example.weather.R
 import com.example.weather.data.WeatherData
+import com.example.weather.data.updateWeatherData
 import com.example.weather.ui.theme.BlueLight
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 @Composable
 fun CurrentCard(weatherState: MutableState<WeatherData>) {
     val minTemp = try{
         weatherState.value.days[0].minTemp
     } catch (t: IndexOutOfBoundsException){
-        "-"
+        "-0"
     }
     val maxTemp = try{
         weatherState.value.days[0].maxTemp
     } catch (t: IndexOutOfBoundsException){
-        "-"
+        "-0"
     }
     Card(
         modifier = Modifier
@@ -76,12 +79,12 @@ fun CurrentCard(weatherState: MutableState<WeatherData>) {
                 color = Color.White
             )
             Text(
-                text = "${weatherState.value.current.temp}°C",
+                text = "${weatherState.value.current.temp.toFloat().roundToInt()}°C",
                 fontSize = 65.sp,
                 color = Color.White
             )
             Text(
-                text = "${weatherState.value.current.description}}",
+                text = weatherState.value.current.description,
                 fontSize = 16.sp,
                 color = Color.White
             )
@@ -100,12 +103,14 @@ fun CurrentCard(weatherState: MutableState<WeatherData>) {
                     )
                 }
                 Text(
-                    text = "${maxTemp}°C/${minTemp}°C",
+                    text = "${maxTemp.toFloat().roundToInt()}°C/${minTemp.toFloat().roundToInt()}°C",
                     fontSize = 16.sp,
                     color = Color.White
                 )
                 IconButton(
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        updateWeatherData("Irkutsk", 3, Const.API_KEY, weatherState)
+                    }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.baseline_cloud_sync_24),
