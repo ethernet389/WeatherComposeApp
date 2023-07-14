@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import com.example.weather.Const
 import okhttp3.ResponseBody
+import org.intellij.lang.annotations.Language
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,14 +12,19 @@ import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-fun updateWeatherData(city: String, daysCount: Int, apiKey: String, state: MutableState<WeatherData>){
+fun updateWeatherData(
+    city: String,
+    daysCount: Int,
+    apiKey: String,
+    language: String,
+    state: MutableState<WeatherData>){
     val retrofit = Retrofit
         .Builder()
         .baseUrl("https://api.weatherapi.com/")
         .build()
     val service = retrofit.create(WeatherApi::class.java)
     service
-        .requireWeatherData(city, daysCount, apiKey)
+        .requireWeatherData(city, daysCount, language, apiKey)
         .enqueue(WeatherCallback(state))
 }
 
@@ -33,7 +39,6 @@ class WeatherCallback(private val state: MutableState<WeatherData>): Callback<Re
             state.value = newData
             return
         }
-        Log.d("RetrofitNonSuccess", response.body()!!.string())
     }
 
     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -47,6 +52,7 @@ interface WeatherApi {
     fun requireWeatherData(
         @Query("q") city: String = "Moscow",
         @Query("days") days: Int = 3,
+        @Query("lang") language: String = "ru",
         @Query("key") apiKey: String
     ): Call<ResponseBody>
 }
