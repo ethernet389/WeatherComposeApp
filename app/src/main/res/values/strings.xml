@@ -1,4 +1,18 @@
 <resources>
     <string name="app_name">Weather</string>
+
+    <!-- Settings Screen -->
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="city_option_label">City</string>
+    <string name="city_option_placeholder">Your City</string>
+    <string name="weather_api_key_option_label">Weather API Key</string>
+    <string name="weather_api_key_opion_placeholder">Your API Key</string>
+    <string name="language_option_header">Language</string>
+    <string name="update_settings_button">Update</string>
+
+    <!-- Main Screen -->
+    <string-array name="weather_tab_row_headers">
+        <item> Hours </item>
+        <item> Days </item>
+    </string-array>
 </resources>

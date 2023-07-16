@@ -1,6 +1,7 @@
 package com.example.weather.activities
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -35,13 +37,7 @@ class MainActivity : ComponentActivity() {
                 val weatherState = remember{
                     mutableStateOf(WeatherData())
                 }
-                updateWeatherData(
-                    city = settingsPrefs.getString(Settings.CITY_NAME, "Moscow")!!,
-                    daysCount = 3,
-                    apiKey = settingsPrefs.getString(Settings.WEATHER_API_KEY, "")!!,
-                    language = settingsPrefs.getString(Settings.APP_LANGUAGE, "ru")!!,
-                    state = weatherState
-                )
+                updateWeatherData(settingsPrefs, weatherState)
                 Image(
                     modifier = Modifier
                         .fillMaxSize()
@@ -65,19 +61,26 @@ class MainActivity : ComponentActivity() {
                             this@MainActivity.startActivity(intent)
                         },
                         onSyncClick = {
-                            updateWeatherData(
-                                city = settingsPrefs.getString(Settings.CITY_NAME, "Moscow")!!,
-                                daysCount = 3,
-                                apiKey = settingsPrefs.getString(Settings.WEATHER_API_KEY, "")!!,
-                                language = settingsPrefs.getString(Settings.APP_LANGUAGE, "ru")!!,
-                                state = weatherState
-                            )
+                            updateWeatherData(settingsPrefs, weatherState)
                         }
                     )
-                    ForecastWeatherList(weatherState)
+                    ForecastWeatherList(
+                        weatherState,
+                        resources.getStringArray(R.array.weather_tab_row_headers).asList()
+                    )
                 }
             }
         }
     }
+}
+
+fun updateWeatherData(prefs: SharedPreferences, state: MutableState<WeatherData>){
+    updateWeatherData(
+        city = prefs.getString(Settings.CITY_NAME, "Moscow")!!,
+        daysCount = 3,
+        apiKey = prefs.getString(Settings.WEATHER_API_KEY, "")!!,
+        language = prefs.getString(Settings.APP_LANGUAGE, "ru")!!,
+        state = state
+    )
 }
 

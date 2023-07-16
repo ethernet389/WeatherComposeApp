@@ -11,6 +11,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,9 +19,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
@@ -40,8 +43,18 @@ import com.example.weather.screens.settings.OptionButton
 import com.example.weather.screens.settings.OptionText
 import com.example.weather.ui.theme.BlueLight
 import com.example.weather.ui.theme.WeatherTheme
+import com.yariksoffice.lingver.Lingver
 
 class SettingsActivity : ComponentActivity() {
+    private fun setNewLocale(language: String){
+        Lingver.getInstance().setLocale(context = this, language = language)
+    }
+
+    private fun restart() {
+        val i = Intent(this, MainActivity::class.java)
+        startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,14 +109,14 @@ class SettingsActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         OptionText(
-                            label = "City",
-                            placeholder = "Your City",
+                            label = getString(R.string.city_option_label),
+                            placeholder = getString(R.string.city_option_placeholder),
                             iconId = R.drawable.baseline_home_24,
                             optionTextState = cityName
                         )
                         OptionText(
-                            label = "Weather API Key",
-                            placeholder = "Your API Key",
+                            label = getString(R.string.weather_api_key_option_label),
+                            placeholder = getString(R.string.weather_api_key_opion_placeholder),
                             iconId = R.drawable.baseline_key_24,
                             optionTextState = weatherApiKey
                         )
@@ -125,7 +138,11 @@ class SettingsActivity : ComponentActivity() {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically){
-                                    Text(text = "Language", fontSize = 20.sp, color = Color.White)
+                                    Text(
+                                        text = getString(R.string.language_option_header),
+                                        fontSize = 20.sp,
+                                        color = Color.White
+                                    )
                                     Icon(
                                         modifier = Modifier.padding(start = 3.dp),
                                         painter = painterResource(R.drawable.baseline_language_24),
@@ -155,25 +172,35 @@ class SettingsActivity : ComponentActivity() {
                                 }
                             }
                         }
-                    }
-                    Button(
-                        onClick = {
-                            val settingsEditor = settingsPrefs.edit()
-                            settingsEditor.putString(Settings.CITY_NAME, cityName.value)
-                            settingsEditor.putString(Settings.WEATHER_API_KEY, weatherApiKey.value)
-                            settingsEditor.putString(Settings.APP_LANGUAGE, language.value)
-                            settingsEditor.apply()
-                        }
-                    ) {
-                        Row(
+                        OutlinedButton(
                             modifier = Modifier
-                                .padding(5.dp)
-                        ){
-                            Text(text = "Update")
-                            Icon(
-                                painter = painterResource(R.drawable.baseline_update_24),
-                                contentDescription = "Update Icon"
-                            )
+                                .padding(5.dp),
+                            onClick = {
+                                val settingsEditor = settingsPrefs.edit()
+                                settingsEditor.putString(Settings.CITY_NAME, cityName.value)
+                                settingsEditor.putString(Settings.WEATHER_API_KEY, weatherApiKey.value)
+                                settingsEditor.putString(Settings.APP_LANGUAGE, language.value)
+                                settingsEditor.apply()
+                                setNewLocale(language.value)
+                                restart()
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = Color(0x00000000),
+                                contentColor = Color.White
+                            ),
+                            border = BorderStroke(1.dp, Color.White)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .padding(5.dp)
+                            ){
+                                Text(text = getString(R.string.update_settings_button))
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_update_24),
+                                    contentDescription = "Update Icon"
+                                )
+                            }
                         }
                     }
                 }

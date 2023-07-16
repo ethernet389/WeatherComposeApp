@@ -40,8 +40,10 @@ import kotlin.math.roundToInt
 
 @ExperimentalFoundationApi
 @Composable
-fun ForecastWeatherList(weatherState: MutableState<WeatherData>) {
-    val tabList = listOf("Hours", "Days")
+fun ForecastWeatherList(
+    weatherState: MutableState<WeatherData>,
+    tabHeaders: List<String>
+) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     Column(
@@ -65,7 +67,7 @@ fun ForecastWeatherList(weatherState: MutableState<WeatherData>) {
             divider = {},
             containerColor = BlueLight
         ) {
-            tabList.forEachIndexed { index, item ->
+            tabHeaders.forEachIndexed { index, item ->
                 Tab(
                     selected = false,
                     onClick = {
@@ -84,7 +86,7 @@ fun ForecastWeatherList(weatherState: MutableState<WeatherData>) {
                 .fillMaxWidth()
                 .weight(1f),
             state = pagerState,
-            pageCount = tabList.size,
+            pageCount = tabHeaders.size,
             pageSpacing = 5.dp
         ) {index ->
             when(index) {

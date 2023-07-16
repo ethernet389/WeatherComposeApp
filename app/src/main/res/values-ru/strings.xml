@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather</string>
+
+    <!-- Settings Screen -->
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="city_option_label">Город</string>
+    <string name="city_option_placeholder">Ваш Город</string>
+    <string name="weather_api_key_option_label">Ключ Weather API</string>
+    <string name="weather_api_key_opion_placeholder">Ваш API ключ</string>
+    <string name="language_option_header">Язык</string>
+    <string name="update_settings_button">Обновить</string>
+
+    <!-- Main Screen -->
+    <string-array name="weather_tab_row_headers">
+        <item>Часы</item>
+        <item>Дни</item>
+    </string-array>
+</resources>
